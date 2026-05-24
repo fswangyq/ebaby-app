@@ -13,3 +13,9 @@ app.use(Vant)
 app.use(router)
 app.use(pinia)
 app.mount('#app')
+
+// 隐藏诊断层
+const diagEl = document.getElementById('diag-status')
+if (diagEl) {
+  diagEl.style.display = 'none'
+}

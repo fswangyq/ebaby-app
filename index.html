@@ -12,8 +12,34 @@
     <title>儿宝伴侣 - 儿童家庭中成药助手</title>
   </head>
   <body>
+    <!-- 诊断状态层：页面加载后自动消失 -->
+    <div id="diag-status" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:99999;font-family:monospace;">⏳ 加载中...</div>
+
     <div id="app"></div>
-    <!-- 清除旧版 PWA Service Worker（v3.0 构建已移除 PWA） -->
+
+    <!-- 全局错误捕获 -->
+    <script>
+      window.__ebabyErrors = [];
+      window.addEventListener('error', function(e) {
+        window.__ebabyErrors.push('JS Error: ' + e.message + ' at ' + (e.filename||'') + ':' + e.lineno);
+        var el = document.getElementById('diag-status');
+        if (el) el.innerHTML = '❌ ERROR: ' + e.message;
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        window.__ebabyErrors.push('Unhandled: ' + (e.reason||'').toString());
+        var el = document.getElementById('diag-status');
+        if (el) el.innerHTML = '❌ REJECTION: ' + (e.reason||'').toString();
+      });
+      // 5秒后还没消失就显示超时
+      setTimeout(function() {
+        var el = document.getElementById('diag-status');
+        if (el && el.innerHTML.indexOf('⏳')===0) {
+          el.innerHTML = '⚠️ JS可能未加载（' + window.__ebabyErrors.length + ' errors）';
+        }
+      }, 5000);
+    </script>
+
+    <!-- 清除旧版 PWA Service Worker -->
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(regs) {
