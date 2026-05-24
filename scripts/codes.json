@@ -1,0 +1,16 @@
+{
+  "seq": 1,
+  "records": [
+    {
+      "seq": 1,
+      "phone": "13800000000",
+      "code": "EB-BQI1-LBFD-40BE",
+      "price": 20,
+      "label": "优惠价",
+      "generatedAt": "2026-05-23T08:31:17.705Z",
+      "expireDate": "2027-05-23",
+      "expireTs": 1811061077705,
+      "used": false
+    }
+  ]
+}

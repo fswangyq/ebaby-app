@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>儿宝伴侣 - 科普管理后台</title>
+  <style>
+    * { margin:0; padding:0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft Yahei', sans-serif; background: #f0f2f5; color: #333; }
+    .header { background: linear-gradient(135deg, #4fc08d 0%, #3aa876 100%); color: #fff; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 20px; font-weight: 600; }
+    .header p { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+    .logout-btn { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); padding: 4px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    .toolbar { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+    .toolbar input[type=text] { flex: 1; min-width: 200px; padding: 6px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; }
+    .toolbar select { padding: 6px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; }
+    .btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; border: none; }
+    .btn-primary { background: #4fc08d; color: #fff; }
+    .btn-danger { background: #ff4d4f; color: #fff; }
+    .btn-default { background: #fff; color: #333; border: 1px solid #d9d9d9; }
+    .article-table { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #fafafa; padding: 10px 12px; text-align: left; color: #666; font-weight: 500; border-bottom: 1px solid #f0f0f0; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; color: #333; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #f6ffed; }
+    .tag { font-size: 11px; padding: 1px 6px; border-radius: 4px; }
+    .tag-tcm { background: #e6f7ff; color: #1890ff; }
+    .tag-food { background: #f6ffed; color: #389e0d; }
+    .tag-season { background: #fff7e6; color: #d48806; }
+    .tag-medicine { background: #f9f0ff; color: #722ed1; }
+    .modal-mask { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal { background: #fff; border-radius: 12px; width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto; padding: 24px; }
+    .modal h2 { font-size: 16px; margin-bottom: 16px; color: #333; }
+    .form-item { margin-bottom: 14px; }
+    .form-item label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
+    .form-item input, .form-item textarea, .form-item select {
+      width: 100%; padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px;
+    }
+    .form-item textarea { min-height: 80px; resize: vertical; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+    .empty-tip { text-align: center; color: #999; padding: 40px 0; font-size: 13px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    .stat-card { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .stat-card .label { font-size: 12px; color: #888; }
+    .stat-card .value { font-size: 22px; font-weight: 600; color: #4fc08d; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>📚 儿宝伴侣 · 科普管理后台</h1>
+      <p>管理H5端的育儿科普文章，新增/编辑/删除</p>
+    </div>
+    <button class="logout-btn" onclick="logout()">退出登录</button>
+  </div>
+
+  <div class="container">
+    <!-- 统计卡片 -->
+    <div class="stats">
+      <div class="stat-card"><div class="label">文章总数</div><div class="value" id="statTotal">0</div></div>
+      <div class="stat-card"><div class="label">辨证入门</div><div class="value" id="statTcm">0</div></div>
+      <div class="stat-card"><div class="label">食疗调理</div><div class="value" id="statFood">0</div></div>
+      <div class="stat-card"><div class="label">总阅读量</div><div class="value" id="statViews">0</div></div>
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="搜索文章标题..." oninput="renderTable()" />
+      <select id="filterCat" onchange="renderTable()">
+        <option value="">全部分类</option>
+        <option value="tcm">辨证入门</option>
+        <option value="food">食疗调理</option>
+        <option value="season">四季养育</option>
+        <option value="medicine">用药答疑</option>
+      </select>
+      <button class="btn btn-primary" onclick="openModal()">+ 新增文章</button>
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="article-table">
+      <table>
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>分类</th>
+            <th>阅读量</th>
+            <th>收藏</th>
+            <th>日期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+      <div id="emptyTip" class="empty-tip" style="display:none;">暂无文章，点击"新增文章"创建</div>
+    </div>
+  </div>
+
+  <!-- 新增/编辑弹窗 -->
+  <div id="modalMask" class="modal-mask" style="display:none;">
+    <div class="modal">
+      <h2 id="modalTitle">新增科普文章</h2>
+      <div class="form-item">
+        <label>文章标题</label>
+        <input type="text" id="formTitle" placeholder="如：宝宝风寒感冒 vs 风热感冒" />
+      </div>
+      <div class="form-item">
+        <label>摘要（显示在列表页）</label>
+        <input type="text" id="formSummary" placeholder="一句话介绍文章内容" />
+      </div>
+      <div class="form-item">
+        <label>分类</label>
+        <select id="formCategory">
+          <option value="tcm">辨证入门</option>
+          <option value="food">食疗调理</option>
+          <option value="season">四季养育</option>
+          <option value="medicine">用药答疑</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>正文内容</label>
+        <textarea id="formContent" placeholder="在此输入文章正文（支持换行）"></textarea>
+      </div>
+      <div class="form-item">
+        <label>发布日期</label>
+        <input type="date" id="formDate" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-default" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveArticle()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 简易鉴权：密码保护（部署时替换为正式登录系统）
+    const ADMIN_PWD = 'ebay2026'
+
+    // 鉴权检查
+    function checkAuth() {
+      const auth = localStorage.getItem('eb_admin_auth')
+      if (auth !== 'true') {
+        const pwd = prompt('请输入管理后台密码：')
+        if (pwd !== ADMIN_PWD) {
+          alert('密码错误，无法访问')
+          document.body.innerHTML = '<p style="text-align:center;padding:40px;color:#999;">无访问权限</p>'
+          return false
+        }
+        localStorage.setItem('eb_admin_auth', 'true')
+      }
+      return true
+    }
+
+    // 退出登录
+    function logout() {
+      localStorage.removeItem('eb_admin_auth')
+      location.reload()
+    }
+
+    // 加载文章数据（从localStorage，与H5端共享）
+    function loadArticles() {
+      return JSON.parse(localStorage.getItem('eb_science_articles') || '[]')
+    }
+
+    function saveArticles(list) {
+      localStorage.setItem('eb_science_articles', JSON.stringify(list))
+    }
+
+    let editingId = null
+
+    // 渲染表格
+    function renderTable() {
+      const articles = loadArticles()
+      const kw = document.getElementById('searchInput').value.trim().toLowerCase()
+      const cat = document.getElementById('filterCat').value
+
+      let filtered = articles.filter(a => {
+        if (kw && !a.title.toLowerCase().includes(kw)) return false
+        if (cat && a.category !== cat) return false
+        return true
+      })
+
+      // 更新统计
+      document.getElementById('statTotal').textContent = articles.length
+      document.getElementById('statTcm').textContent = articles.filter(a => a.category === 'tcm').length
+      document.getElementById('statFood').textContent = articles.filter(a => a.category === 'food').length
+      document.getElementById('statViews').textContent = articles.reduce((s, a) => s + (a.views || 0), 0)
+
+      const tbody = document.getElementById('tableBody')
+      const emptyTip = document.getElementById('emptyTip')
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = ''
+        emptyTip.style.display = 'block'
+        return
+      }
+      emptyTip.style.display = 'none'
+
+      const catLabels = { tcm: '辨证入门', food: '食疗调理', season: '四季养育', medicine: '用药答疑' }
+      const catClass = { tcm: 'tag-tcm', food: 'tag-food', season: 'tag-season', medicine: 'tag-medicine' }
+
+      tbody.innerHTML = filtered.map(a => `
+        <tr>
+          <td style="font-weight:500;">${escapeHtml(a.title)}</td>
+          <td><span class="tag ${catClass[a.category] || ''}">${catLabels[a.category] || a.category}</span></td>
+          <td>${(a.views || 0).toLocaleString()}</td>
+          <td>${(a.collections || 0).toLocaleString()}</td>
+          <td>${a.date || ''}</td>
+          <td>
+            <button class="btn btn-default" style="margin-right:4px;padding:2px 8px;font-size:12px;" onclick="editArticle(${a.id})">编辑</button>
+            <button class="btn btn-danger" style="padding:2px 8px;font-size:12px;" onclick="deleteArticle(${a.id})">删除</button>
+          </td>
+        </tr>
+      `).join('')
+    }
+
+    // 打开弹窗（新增）
+    function openModal() {
+      editingId = null
+      document.getElementById('modalTitle').textContent = '新增科普文章'
+      document.getElementById('formTitle').value = ''
+      document.getElementById('formSummary').value = ''
+      document.getElementById('formCategory').value = 'tcm'
+      document.getElementById('formContent').value = ''
+      document.getElementById('formDate').value = new Date().toISOString().slice(0, 10)
+      document.getElementById('modalMask').style.display = 'flex'
+    }
+
+    // 打开弹窗（编辑）
+    function editArticle(id) {
+      const articles = loadArticles()
+      const a = articles.find(x => x.id === id)
+      if (!a) return
+      editingId = id
+      document.getElementById('modalTitle').textContent = '编辑科普文章'
+      document.getElementById('formTitle').value = a.title || ''
+      document.getElementById('formSummary').value = a.summary || ''
+      document.getElementById('formCategory').value = a.category || 'tcm'
+      document.getElementById('formContent').value = a.content || ''
+      document.getElementById('formDate').value = a.date || new Date().toISOString().slice(0, 10)
+      document.getElementById('modalMask').style.display = 'flex'
+    }
+
+    function closeModal() {
+      document.getElementById('modalMask').style.display = 'none'
+    }
+
+    // 保存文章
+    function saveArticle() {
+      const title = document.getElementById('formTitle').value.trim()
+      if (!title) { alert('请填写文章标题'); return }
+
+      const articles = loadArticles()
+      const now = new Date().toISOString().slice(0, 10)
+
+      if (editingId) {
+        // 编辑
+        const idx = articles.findIndex(a => a.id === editingId)
+        if (idx >= 0) {
+          articles[idx] = {
+            ...articles[idx],
+            title,
+            summary: document.getElementById('formSummary').value.trim(),
+            category: document.getElementById('formCategory').value,
+            content: document.getElementById('formContent').value.trim(),
+            date: document.getElementById('formDate').value || now
+          }
+        }
+      } else {
+        // 新增
+        const maxId = articles.length > 0 ? Math.max(...articles.map(a => a.id)) : 0
+        articles.unshift({
+          id: maxId + 1,
+          title,
+          summary: document.getElementById('formSummary').value.trim(),
+          category: document.getElementById('formCategory').value,
+          content: document.getElementById('formContent').value.trim(),
+          date: document.getElementById('formDate').value || now,
+          views: 0,
+          collections: 0
+        })
+      }
+
+      saveArticles(articles)
+      closeModal()
+      renderTable()
+    }
+
+    // 删除文章
+    function deleteArticle(id) {
+      if (!confirm('确定要删除这篇文章吗？')) return
+      let articles = loadArticles()
+      articles = articles.filter(a => a.id !== id)
+      saveArticles(articles)
+      renderTable()
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div')
+      div.textContent = str || ''
+      return div.innerHTML
+    }
+
+    // 初始化
+    if (checkAuth()) {
+      renderTable()
+    }
+  </script>
+</body>
+</html>

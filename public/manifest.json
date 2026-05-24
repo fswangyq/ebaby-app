@@ -1,0 +1,32 @@
+{
+  "name": "儿宝伴侣 - 儿童家庭中成药助手",
+  "short_name": "儿宝伴侣",
+  "description": "0-12岁儿童家庭中成药智能管理系统，轻症居家护理辅助工具",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5f5",
+  "theme_color": "#07c160",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["health", "medical", "family"],
+  "screenshots": [],
+  "dir": "ltr",
+  "lang": "zh-CN"
+}

@@ -1,0 +1,1116 @@
+<template>
+  <div class="knowledge-wrap">
+    <!-- 页头 -->
+    <div class="page-header">
+      <div class="header-bg"></div>
+      <div class="header-content">
+        <button class="back-btn" @click="goBack">← 返回</button>
+        <h2>📚 辨证知识库</h2>
+        <p>小儿感冒证型详解 · 家用药指南 · 小儿推拿配穴 · 护理要点</p>
+      </div>
+    </div>
+
+    <!-- 总论 -->
+    <div class="intro-card">
+      <div class="intro-title">🩺 小儿感冒辨证总论</div>
+      <div class="intro-text">
+        小儿"脏腑娇嫩，形气未充"，感冒传变速度远快于成人。
+        中医将感冒分为<strong>寒、热、积、虚</strong>五大方向，
+        辨准证型是用对中成药的前提。<br><br>
+        关键口诀："<strong>有汗桂枝无汗麻黄，清涕风寒黄涕风热，舌苔厚腻必问湿热，腹胀口臭积食莫忘</strong>。"
+      </div>
+    </div>
+
+    <!-- ===== 小儿推拿总论 ===== -->
+    <div class="pattern-list">
+      <div class="pattern-card" :class="{ expanded: expandedGuideId === 'tuina-general' }">
+        <div class="pt-header" @click="toggleGuide('tuina-general')" style="border-left-color:#d4a017;">
+          <span class="pt-badge" style="background:#d4a017;">推拿</span>
+          <div class="pt-title-area">
+            <span class="pt-name">小儿推拿总论</span>
+            <span class="pt-keyword">基本手法 · 常用穴位 · 注意事项</span>
+          </div>
+          <span class="pt-toggle">{{ expandedGuideId === 'tuina-general' ? '▾' : '▸' }}</span>
+        </div>
+        <div v-if="expandedGuideId === 'tuina-general'" class="pt-body">
+          <div class="kb-section">
+            <div class="kb-s-title">🖐 什么是小儿推拿</div>
+            <div class="kb-text">
+              小儿推拿是以中医理论为指导，运用特定手法作用于小儿体表特定穴位，以调节脏腑、疏通经络、调和气血、平衡阴阳，
+              达到防治疾病和保健目的的一种外治法。明代《小儿按摩经》将其系统化，清代《厘正按摩要术》进一步整理完善。<br><br>
+              <strong>核心优势：</strong>不用药、不扎针、无副作用，特别适合婴幼儿；尤其对3周岁以下婴幼儿，推拿可替代药物成为首选干预手段。
+            </div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">✋ 基本手法</div>
+            <div class="tuina-grid">
+              <div class="tuina-item" v-for="t in tuiNaGeneral.techniques" :key="t.name">
+                <span class="tuina-name">{{ t.name }}</span>
+                <span class="tuina-desc">{{ t.desc }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">⚠️ 操作原则</div>
+            <div v-for="p in tuiNaGeneral.principles" :key="p" class="care-item" style="color:#8c6d1f;">· {{ p }}</div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">⏱ 操作时长与频率</div>
+            <div class="kb-text">{{ tuiNaGeneral.duration }}</div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">🛑 推拿禁忌</div>
+            <div v-for="c in tuiNaGeneral.contraindications" :key="c" class="red-item">⚠️ {{ c }}</div>
+          </div>
+
+          <div class="kb-section classic-box">
+            <div class="kb-s-title">📜 经典引用</div>
+            <div class="classic-text">「小儿推拿……其去病之功，捷于汤药。盖小儿脏腑娇嫩，不耐药力，推拿最为相宜。」</div>
+            <div class="classic-source">—— 《厘正按摩要术》</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 3周岁以下婴幼儿推拿专属指南 ===== -->
+      <div class="pattern-card infant-card" :class="{ expanded: expandedGuideId === 'tuina-infant' }">
+        <div class="pt-header" @click="toggleGuide('tuina-infant')" style="border-left-color:#e87da0;">
+          <span class="pt-badge" style="background:#e87da0;">👶 0-3岁</span>
+          <div class="pt-title-area">
+            <span class="pt-name">3周岁以下婴幼儿推拿专属指南</span>
+            <span class="pt-keyword">不用药首选 · 极轻柔手法 · 安全配穴</span>
+          </div>
+          <span class="pt-toggle">{{ expandedGuideId === 'tuina-infant' ? '▾' : '▸' }}</span>
+        </div>
+        <div v-if="expandedGuideId === 'tuina-infant'" class="pt-body">
+          <div class="kb-section red-box">
+            <div class="kb-s-title">🚨 为什么3周岁以下首选推拿而非用药？</div>
+            <div class="kb-text" style="color:#cf1322;">
+              1. 3周岁以下婴幼儿肝肾功能尚未发育成熟，药物代谢能力差，任何中成药都可能造成肝肾负担。<br>
+              2. 婴幼儿"脏腑娇嫩、形气未充"，对药性反应敏感，用药剂量极难精准控制。<br>
+              3. 婴幼儿皮肤薄、经络敏感，推拿透达力强，刺激量小即可产生显著效果。<br>
+              4. 明代《小儿按摩经》已明确："小儿百病，推拿为先，药石次之。"<br><br>
+              <strong>核心原则：先推拿、后观察、再考虑用药。</strong>
+            </div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">🖐 3周岁以下操作规范</div>
+            <div v-for="s in tuiNaInfant.safetyRules" :key="s" class="care-item" style="color:#c41d7f;">· {{ s }}</div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">🩺 常见问题推拿配穴</div>
+            <div v-for="proto in tuiNaInfant.protocols" :key="proto.issue" class="infant-proto">
+              <div class="infant-proto-title">{{ proto.issue }}</div>
+              <div v-for="step in proto.steps" :key="step" class="infant-proto-step">{{ step }}</div>
+            </div>
+          </div>
+
+          <div class="kb-section">
+            <div class="kb-s-title">🏠 日常保健推拿（每日可做）</div>
+            <div v-for="d in tuiNaInfant.dailyCare" :key="d" class="care-item" style="color:#389e0d;">· {{ d }}</div>
+          </div>
+
+          <div class="kb-section red-box">
+            <div class="kb-s-title">🚨 3周岁以下婴幼儿就医红线</div>
+            <div v-for="r in tuiNaInfant.redFlags" :key="r" class="red-item">⚠️ {{ r }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 证型列表 -->
+    <div class="pattern-list">
+      <div
+        v-for="pt in patternKnowledge"
+        :key="pt.id"
+        class="pattern-card"
+        :class="{ expanded: expandedId === pt.id }"
+      >
+        <!-- 卡片头部 -->
+        <div class="pt-header" @click="toggle(pt.id)" :style="{ borderLeftColor: pt.color }">
+          <span class="pt-badge" :style="{ background: pt.color }">{{ pt.badge }}</span>
+          <div class="pt-title-area">
+            <span class="pt-name">{{ pt.name }}</span>
+            <span class="pt-keyword">{{ pt.keyword }}</span>
+          </div>
+          <span class="pt-toggle">{{ expandedId === pt.id ? '▾' : '▸' }}</span>
+        </div>
+
+        <!-- 展开内容 -->
+        <div v-if="expandedId === pt.id" class="pt-body">
+          <!-- 病机 -->
+          <div class="kb-section">
+            <div class="kb-s-title">📖 病机</div>
+            <div class="kb-text">{{ pt.pathomechanism }}</div>
+          </div>
+
+          <!-- 辨证要点 -->
+          <div class="kb-section">
+            <div class="kb-s-title">🔍 辨证要点</div>
+            <div class="kb-tags">
+              <span v-for="p in pt.keyPoints" :key="p" class="kb-tag">{{ p }}</span>
+            </div>
+          </div>
+
+          <!-- 典型症状 -->
+          <div class="kb-section">
+            <div class="kb-s-title">🤒 典型症状</div>
+            <div class="kb-text">{{ pt.symptoms }}</div>
+          </div>
+
+          <!-- 推荐中成药 -->
+          <div class="kb-section med-section-box">
+            <div class="kb-s-title">💊 推荐中成药</div>
+            <div class="med-rec-list">
+              <div v-for="m in pt.medicines" :key="m" class="med-rec-item">
+                <span class="med-rec-name">{{ m }}</span>
+              </div>
+            </div>
+            <div v-if="pt.medNote" class="kb-text" style="font-size:12px;margin-top:8px;">{{ pt.medNote }}</div>
+          </div>
+
+          <!-- 家庭护理 -->
+          <div class="kb-section care-box">
+            <div class="kb-s-title">🏠 家庭护理</div>
+            <div v-for="c in pt.homeCare" :key="c" class="care-item">· {{ c }}</div>
+          </div>
+
+          <!-- 推拿配穴 -->
+          <div v-if="pt.tuiNa && pt.tuiNa.length" class="kb-section tui-box">
+            <div class="kb-s-title">🖐 推拿配穴</div>
+            <div v-for="t in pt.tuiNa" :key="t" class="tui-item">{{ t }}</div>
+            <div v-if="pt.tuiNaNote" class="kb-text" style="font-size:12px;margin-top:8px;color:#8c6d1f;">💡 {{ pt.tuiNaNote }}</div>
+          </div>
+
+          <!-- 就医红线 -->
+          <div class="kb-section red-box">
+            <div class="kb-s-title">🚨 何时就医</div>
+            <div v-for="r in pt.redFlags" :key="r" class="red-item">⚠️ {{ r }}</div>
+          </div>
+
+          <!-- 经典引用 -->
+          <div v-if="pt.classicQuote" class="kb-section classic-box">
+            <div class="kb-s-title">📜 经典引用</div>
+            <div class="classic-text">「{{ pt.classicQuote }}」</div>
+            <div v-if="pt.classicSource" class="classic-source">—— {{ pt.classicSource }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="disclaimer">
+      <p>以上辨证内容依据《伤寒论》《金匮要略》《温病条辨》整理；</p>
+      <p>推拿内容参考《小儿按摩经》《厘正按摩要术》及现代小儿推拿教材；</p>
+      <p>仅供学习参考，具体用药请咨询执业中医师，推拿前确认无禁忌症。</p>
+    </div>
+
+    <div style="height:80px;"></div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const expandedId = ref(null)
+const expandedGuideId = ref(null)
+
+function toggle(id) {
+  expandedId.value = expandedId.value === id ? null : id
+}
+
+function toggleGuide(id) {
+  expandedGuideId.value = expandedGuideId.value === id ? null : id
+}
+
+function goBack() {
+  router.back()
+}
+
+// ===== 小儿推拿总论 =====
+const tuiNaGeneral = {
+  techniques: [
+    { name: '推法', desc: '用拇指或食中二指在穴位上作直线推动，频率120-200次/分。' },
+    { name: '揉法', desc: '用指腹或掌根在穴位上作回旋揉动，力度均匀柔和。' },
+    { name: '摩法', desc: '用掌心或四指在腹部作环形抚摩，顺时针为泻、逆时针为补。' },
+    { name: '按法', desc: '用拇指或掌根在穴位上逐渐用力按压，得气后停留数秒松开。' },
+    { name: '掐法', desc: '用拇指指甲重刺穴位，多用于急救醒神，一般3-5次即可。' },
+    { name: '捏法', desc: '拇指与食中指相对捏提皮肤，自下而上为「捏脊」，小儿保健首选。' },
+    { name: '运法', desc: '用拇指或中指在穴位上作弧形或环形推动，速度较推法慢。' },
+  ],
+  principles: [
+    '操作前洗手剪指甲，取下手表戒指，双手搓热后再接触宝宝皮肤',
+    '使用滑石粉、爽身粉或婴儿润肤油作介质，减少摩擦',
+    '手法由轻到重、由慢到快、由浅入深，循序渐进',
+    '单穴操作时长：一般每穴50-200次（约1-3分钟），3周岁以下减半',
+    '补泻原则：向心推为补（如推三关），离心推为泻（如退六腑）',
+    '方向口诀：「旋推为补，直推为清」「顺经为补，逆经为泻」',
+    '推拿时间：上午阳气旺盛时推拿效果最佳，避免睡前1小时内进行较重的推拿',
+    '操作顺序：头面→上肢→胸腹→腰背→下肢，先阳后阴',
+  ],
+  duration: '每次推拿总时长5-15分钟（3周岁以下5-8分钟），每日1-2次。急性病可每日2次，慢性调理每日1次，7天为一个疗程，间隔2-3天再续。一般1-3个疗程可见明显效果。',
+  contraindications: [
+    '高热（≥39.5℃）时不宜推拿，应先药物退热',
+    '皮肤破损、感染、湿疹急性期、烧伤烫伤部位禁推',
+    '骨折、脱臼未复位者禁在局部推拿',
+    '出血性疾病（血小板减少、血友病等）禁推',
+    '急性传染病（麻疹、水痘、猩红热等）出疹期禁推',
+    '严重心脏病、极度虚弱者慎用推拿',
+    '饭后30分钟内不宜推腹部',
+    '推拿后30分钟不宜洗澡、不宜吹冷风',
+  ],
+}
+
+// ===== 3周岁以下婴幼儿推拿指南 =====
+const tuiNaInfant = {
+  safetyRules: [
+    '力度极轻：仅为成人的1/5力量，以皮肤微红为度，不可出痧、不可掐破',
+    '时间减半：单穴30-50次（约30秒），总时长不超过8分钟',
+    '只推左手：3周岁以下推拿以左手为主（男左女右规律不强，简化操作）',
+    '禁止掐法：严禁对3周岁以下婴幼儿使用掐法（如掐人中、掐四缝），痛感过强',
+    '禁止捏脊重手法：捏脊仅用最轻的"抚脊"，不可提弹皮肤',
+    '禁用强刺激穴位：人中、十宣、委中等急救穴非必要不碰',
+    '空腹或喂奶后至少间隔30分钟再推',
+    '操作环境：室温26-28℃，避风，光线柔和，可放轻柔音乐',
+    '操作者情绪：心平气和、专注安静，紧张急躁会影响手感和效果',
+  ],
+  protocols: [
+    {
+      issue: '🌬️ 感冒鼻塞',
+      steps: [
+        '开天门30次：拇指从眉心交替上推至前发际，力极轻',
+        '推坎宫30次：从眉心沿眉弓向两侧分推',
+        '揉迎香50次：食指尖揉鼻翼两侧迎香穴，可缓解鼻塞',
+        '清肺经50次：在无名指掌面从指根推向指尖',
+        '揉耳后高骨30次：耳后乳突下凹陷处揉按',
+      ],
+    },
+    {
+      issue: '🤒 低热（<38.5℃）',
+      steps: [
+        '清天河水80次：前臂正中从腕横纹推向肘横纹，手法流畅如水',
+        '推脊30次：食中二指沿脊柱从大椎推至尾骨',
+        '揉大椎50次：第7颈椎棘突下，清热要穴',
+        '注意：3周岁以下禁用退六腑（退热力太强），只用清天河水',
+      ],
+    },
+    {
+      issue: '😣 腹胀腹痛（肠绞痛）',
+      steps: [
+        '摩腹80次：掌心轻贴肚脐，顺时针环形摩动（顺时针为泻、通便消胀）',
+        '揉板门50次：拇指大鱼际处揉按',
+        '揉足三里50次：膝盖外下方3指处，补脾健胃',
+        '分推腹阴阳30次：两拇指从小儿剑突下沿肋弓向两侧分推',
+        '空中蹬自行车：辅助动作，婴儿仰卧做蹬腿动作10次，帮助排气',
+      ],
+    },
+    {
+      issue: '💩 便秘',
+      steps: [
+        '摩腹100次：顺时针环形轻摩（通便）',
+        '揉龟尾50次：尾骨尖端揉按',
+        '推下七节骨50次：从第4腰椎推至尾骨',
+        '揉天枢50次：肚脐旁开2指处，双向揉按',
+        '辅助：棉签蘸温水轻刺激肛门周围，引排便反射',
+      ],
+    },
+    {
+      issue: '😴 夜啼不安',
+      steps: [
+        '揉百会30次：头顶正中轻揉（囟门未闭者仅用掌心温热覆盖，不揉）',
+        '揉小天心50次：大小鱼际交接凹陷处按揉',
+        '揉神门30次：腕横纹尺侧端凹陷处按揉',
+        '摩囟门：掌心轻贴前囟门，顺时针缓慢摩动30次（仅囟门闭合后可用）',
+        '辅助：温水泡脚5分钟（37-38℃），睡前操作',
+      ],
+    },
+    {
+      issue: '🍼 吐奶/溢奶',
+      steps: [
+        '揉中脘50次：肚脐上4指，轻揉和胃降逆',
+        '推板门30次：从腕横纹推向板门（拇指根）',
+        '揉足三里50次：健脾和胃',
+        '喂奶后竖抱15-20分钟，轻拍嗝，推拿在喂奶前30分钟进行',
+      ],
+    },
+  ],
+  dailyCare: [
+    '摩腹50次：顺时针+逆时针各半，调理脾胃',
+    '捏脊（轻抚式）3遍：拇指与食指轻捏皮肤从尾骨至大椎，增强抵抗力',
+    '揉足三里30次：保健要穴，健脾益气',
+    '揉板门30次：消食化积、健脾和胃',
+    '以上四个动作每日1次，清晨或上午最佳，3-5分钟即可',
+  ],
+  redFlags: [
+    '发热≥38.5℃',
+    '呼吸急促（>40次/分）、鼻翼煽动、吸气三凹征',
+    '拒奶超过8小时、小便明显减少（脱水）',
+    '持续哭闹无法安抚、囟门隆起',
+    '皮肤出现紫斑、出血点',
+    '抽搐、意识改变',
+    '腹胀进行性加重、呕出黄绿色物',
+    '黄疸加重或持续不退',
+  ],
+}
+
+// ===== 11 证型知识库 =====
+const patternKnowledge = [
+  {
+    id: 'wind_cold',
+    name: '风寒感冒',
+    keyword: '恶寒重 · 发热轻 · 无汗',
+    badge: '寒',
+    color: '#1668dc',
+    pathomechanism: '风寒束表，卫阳被遏。外感风寒之邪从皮毛口鼻而入，寒为阴邪，其性收引凝滞，导致腠理闭塞、肺气失宣。',
+    keyPoints: ['怕冷明显，想盖被子', '清鼻涕如水样', '不出汗或汗少', '咳白痰稀痰', '舌苔白薄'],
+    symptoms: '恶寒重、发热轻、无汗、头痛身痛、鼻塞、流清涕、咳嗽痰白稀薄、口不渴、舌苔薄白、脉浮紧。',
+    medicines: ['风寒感冒颗粒', '荆防颗粒', '通宣理肺口服液', '感冒清热颗粒（偏寒热错杂时用）'],
+    medNote: '注意区分：感冒清热颗粒含防风、薄荷，适用于"外寒内热"的寒热错杂证，纯风寒不首选此药。',
+    homeCare: [
+      '生姜红糖水：生姜3片+红糖1勺，热水冲泡趁热服，盖被微出汗即停',
+      '紫苏叶泡脚：紫苏叶15g煮水，水温40℃左右泡脚10分钟',
+      '忌冷饮、冰淇淋、冰西瓜等寒凉食物',
+      '保持室温24-26℃，湿度50-60%，避免再次受凉',
+    ],
+    redFlags: [
+      '高热不退（≥39.5℃）超过24小时',
+      '出现呼吸困难、鼻翼煽动',
+      '精神萎靡、嗜睡难唤醒',
+      '3周岁以下婴幼儿出现拒奶、烦躁不安',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '开天门50次：拇指从眉心交替上推至前发际，发散风寒',
+      '推坎宫50次：沿眉弓向两侧分推，疏风解表',
+      '揉太阳50次：太阳穴揉按，缓解头痛',
+      '揉耳后高骨50次：耳后乳突下凹陷，解表要穴',
+      '推三关150次：前臂桡侧从腕推向肘，大热穴，散寒温阳',
+      '揉外劳宫100次：手背中央第2-3掌骨间，温阳散寒',
+      '揉一窝风50次：手背腕横纹中点，祛风散寒要穴',
+    ],
+    tuiNaNote: '推三关是风寒感冒核心手法，3周岁以下改为80次。推拿后用温热毛巾敷额头5分钟、大椎穴3分钟，效果更佳。可配合生姜紫苏煮水温泡脚5-8分钟。',
+    classicQuote: '太阳病，头痛发热，身疼腰痛，骨节疼痛，恶风，无汗而喘者，麻黄汤主之。',
+    classicSource: '《伤寒论》第35条',
+  },
+  {
+    id: 'wind_heat',
+    name: '风热感冒',
+    keyword: '发热重 · 恶寒轻 · 咽红肿',
+    badge: '热',
+    color: '#f5222d',
+    pathomechanism: '风热袭表，热邪犯肺。风热之邪从口鼻而入，热为阳邪，其性燔灼炎上，耗伤津液，导致咽喉红肿、肺失清肃。',
+    keyPoints: ['不怕冷或怕冷轻', '发热明显', '咽喉红肿疼痛', '黄鼻涕黄痰', '舌苔黄薄或黄厚'],
+    symptoms: '发热重、微恶寒、有汗或微汗、咽喉红肿痛、鼻塞黄涕、咳嗽痰黄稠、口干欲饮、舌尖红苔薄黄、脉浮数。',
+    medicines: ['小儿豉翘清热颗粒', '双黄连口服液', '银翘解毒颗粒', '蒲地蓝消炎口服液'],
+    medNote: '小儿豉翘清热颗粒含大黄，0-3岁慎用。蒲地蓝性寒，脾胃虚寒者宜饭后服。',
+    homeCare: [
+      '金银花菊花茶：金银花3g+菊花2g，开水冲泡代茶饮',
+      '饮食清淡：白粥、烂面、蒸蛋，忌辛辣油腻',
+      '多喝温水，保持咽喉湿润',
+      '冰敷前额（毛巾包裹），物理降温',
+    ],
+    redFlags: [
+      '高热（≥39.5℃）不退',
+      '咽喉肿痛导致吞咽困难、拒水',
+      '出现皮疹（警惕猩红热或其他传染病）',
+      '咳嗽伴有呼吸困难',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清天河水200次：前臂正中从腕推向肘，清热不伤阴，风热首选',
+      '清肺经200次：无名指掌面从指根推向指尖，清肺泄热',
+      '揉板门100次：大鱼际揉按，清热消食',
+      '揉大椎100次：第7颈椎棘突下，清热要穴',
+      '推脊50次：沿脊柱从中上段向下推，通督泄热',
+      '揉曲池50次：肘横纹外侧端，清热利咽',
+    ],
+    tuiNaNote: '清天河水+清肺经是风热感冒黄金配穴。若咽喉肿痛明显加揉少商穴（拇指桡侧指甲角旁）各30次。3周岁以下清天河水减至80次，退六腑禁用。',
+    classicQuote: '太阴风温、温热、温疫、冬温……但热不恶寒而渴者，辛凉平剂银翘散主之。',
+    classicSource: '《温病条辨》上焦篇',
+  },
+  {
+    id: 'damp-heat',
+    name: '湿热/暑湿感冒',
+    keyword: '身热不扬 · 头重如裹 · 舌苔厚腻',
+    badge: '🔥 重',
+    color: '#d46b08',
+    pathomechanism: '暑湿或湿热困表，气机不畅。湿为阴邪，其性黏滞，与热相合，如油入面，难解难分。湿阻气机则身重困倦，热蒸湿动则苔腻口黏。多见于夏季或梅雨季节。',
+    keyPoints: ['身热不扬（摸着热但体温不高）', '头重如裹，浑身困重', '舌苔厚腻（黄腻为湿热，白腻为寒湿）', '大便黏腻不爽，黏马桶', '口苦口黏腻'],
+    symptoms: '身热不扬、午后热甚、头重如裹、胸闷脘痞、恶心欲呕、大便黏滞不爽、小便黄、舌苔黄腻或白厚腻。',
+    medicines: ['藿香正气口服液', '保济口服液', '甘露消毒丹', '六合定中丸'],
+    medNote: '藿香正气水含酒精，儿童用口服液（无酒精版）。湿热感冒忌用发汗法，发汗伤津反而加重。中病即止，不宜久服。',
+    homeCare: [
+      '藿香佩兰茶：鲜藿香+佩兰各5g，开水冲泡代茶',
+      '保持室内通风干燥，用除湿机降低湿度',
+      '饮食：薏米粥、冬瓜汤、白扁豆（健脾利湿）',
+      '忌生冷瓜果、甜腻食物（助湿）',
+    ],
+    redFlags: [
+      '高热不退伴剧烈头痛',
+      '呕吐频繁、不能进食进水',
+      '精神萎靡、小便明显减少（脱水）',
+      '出现黄疸（皮肤眼白发黄）',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清天河水100次：清热利湿',
+      '推脊50次：从上向下推脊，通督泄热',
+      '揉板门100次：健脾化湿',
+      '运内八卦100次：围绕掌心画圈，理气和胃、化湿消滞',
+      '揉中脘100次：脐上4指，健脾化湿',
+      '摩腹100次：顺时针环形摩动，化湿导滞',
+      '揉足三里50次：健脾利湿要穴',
+    ],
+    tuiNaNote: '湿热感冒重在"化湿"而非"发汗"——发汗伤津、湿反不化。运内八卦+摩腹是核心。夏季可配合藿香佩兰煮水擦浴（非推拿替代，辅助清热化湿）。',
+    classicQuote: '暑温，寒热，舌白不渴，吐血者，名曰暑瘵……湿温，脉缓，舌苔白滑，不食不饥……',
+    classicSource: '《温病条辨》上焦篇',
+  },
+  {
+    id: 'cold-with-food',
+    name: '风寒挟积食',
+    keyword: '怕冷清涕 + 腹胀口臭',
+    badge: '⚡ 复合',
+    color: '#c41d7f',
+    pathomechanism: '外感风寒，内伤饮食。小儿"脾常不足"，饮食不节先伤脾胃，又感风寒外邪，表里同病。风寒在表故恶寒清涕，食积在里故腹胀口臭。',
+    keyPoints: ['既有风寒症状（怕冷、清涕）', '又有积食症状（腹胀、口臭、便秘）', '舌苔白厚腻', '手心热于手背', '不欲饮食'],
+    symptoms: '恶寒、清涕、咳嗽白痰，同时腹胀满、嗳腐吞酸、口臭、大便干结或酸臭、不思饮食、夜卧不安。',
+    medicines: ['午时茶颗粒', '保和丸 + 风寒感冒颗粒', '大山楂丸 + 荆防颗粒'],
+    medNote: '午时茶专门针对"外感风寒+内伤食积"，是小儿风寒挟积食的首选成药。分量：0-3岁1/4袋，3-6岁1/2袋，6-12岁1袋。',
+    homeCare: [
+      '先消食后散寒：焦三仙（焦山楂+焦麦芽+焦神曲）各5g煮水，消积后再用姜糖水散寒',
+      '腹部顺时针按摩100次，促进肠胃蠕动',
+      '饮食：暂停肉蛋奶，只吃白粥、烂面至腹胀消除',
+      '艾灸中脘穴5分钟（适用于3岁以上）',
+    ],
+    redFlags: [
+      '腹胀持续不缓解，腹痛拒按',
+      '呕吐物呈黄绿色或咖啡色',
+      '发热超过38.5℃',
+      '大便完全不通超过3天',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '推三关100次：前臂桡侧从腕推向肘，散寒（先做）',
+      '揉板门150次：大鱼际揉按，消食化积',
+      '摩腹150次：顺时针环形摩动，消食导滞',
+      '揉中脘100次：脐上4指，健脾和胃',
+      '运内八卦100次：围绕掌心画圈，理气消滞',
+      '捏脊5遍：从尾骨捏至大椎，消积健脾',
+      '按揉足三里50次：补脾和胃',
+      '揉天枢100次：脐旁2指，双向揉按，通腑导滞',
+    ],
+    tuiNaNote: '先散寒（推三关），后消积（摩腹+揉板门）。若腹胀明显可加分推腹阴阳50次。推拿后禁食1小时。此证型推拿效果往往优于单用药物，值得坚持。',
+    classicQuote: '若要小儿安，常带三分饥与寒。',
+    classicSource: '《千金要方》孙思邈',
+  },
+  {
+    id: 'food-with-heat',
+    name: '积食挟风热',
+    keyword: '发热咽红 + 腹胀便秘',
+    badge: '⚡ 复合',
+    color: '#c41d7f',
+    pathomechanism: '食积化热，复感风热。饮食停滞胃肠，郁而化热，又感风热外邪，内外合邪。食积之火与风热相煽，热势更盛。',
+    keyPoints: ['发热、咽喉红肿（风热特征）', '腹胀、口臭、便秘（积食特征）', '舌苔黄厚腻', '烦躁哭闹', '大便干硬或酸臭'],
+    symptoms: '发热、咽喉红痛、黄涕，同时腹胀硬满、口气酸腐、便秘或泻下酸臭、烦躁不安、夜啼、指纹紫滞。',
+    medicines: ['小儿化食丸 + 双黄连', '健儿清解液', '一捻金（通便后转用清热药）'],
+    medNote: '积食挟风热先通便后清热。一捻金（含牵牛子、大黄）泻下力强，0-3岁禁用，中病即止不可久服。',
+    homeCare: [
+      '焦三仙汤+金银花：焦三仙各5g + 金银花3g，同煮水服',
+      '顺时针按摩腹部+揉板门穴各3分钟',
+      '暂停高蛋白高脂肪食物至少24小时',
+      '给予梨水、藕粉等滋阴润燥之品',
+    ],
+    redFlags: [
+      '高热≥39.5℃',
+      '剧烈腹痛、腹部板硬',
+      '频繁呕吐不能进食',
+      '出现脱水迹象',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清天河水150次：清热（先做）',
+      '揉板门200次：消食化积核心穴',
+      '摩腹150次：顺时针环形摩动，导滞通便',
+      '运内八卦100次：理气和胃、消积化滞',
+      '退六腑100次：前臂尺侧从肘推向腕，清热通腑（3岁以上可用，3周岁以下减至50次）',
+      '推下七节骨50次：从第4腰椎推至尾骨，通便',
+      '揉天枢50次：脐旁2指，通腑导滞',
+      '捏脊3遍：从尾骨至大椎，消食健脾',
+    ],
+    tuiNaNote: '先清热（清天河水），后消积（摩腹+揉板门）。退六腑性大寒，3周岁以下慎用或减量。若大便干硬如羊粪，加揉龟尾50次（尾骨尖端）。推拿后给少量温水。',
+    classicQuote: '饮食自倍，肠胃乃伤。',
+    classicSource: '《素问·痹论》',
+  },
+  {
+    id: 'shaoyang',
+    name: '少阳证（寒热往来）',
+    keyword: '一阵冷一阵热 · 口苦咽干',
+    badge: '🫁 经方',
+    color: '#722ed1',
+    pathomechanism: '邪入少阳，枢机不利。外邪由太阳（表）传入少阳（半表半里），正邪分争于表里之间，故寒热往来。少阳经气不利则胸胁苦满、口苦咽干。',
+    keyPoints: ['寒热往来（一阵冷一阵热）', '口苦', '咽干', '胸胁苦满（两侧胁下胀满）', '默默不欲饮食'],
+    symptoms: '寒热往来、胸胁苦满、口苦咽干、心烦喜呕、不思饮食、目眩、舌苔白或黄薄、脉弦。',
+    medicines: ['小柴胡颗粒', '少阳感冒颗粒'],
+    medNote: '少阳证的标志性主方是小柴胡汤。注意：小柴胡颗粒并非"治一切感冒"，仅适用于寒热往来证型。',
+    homeCare: [
+      '小柴胡颗粒成人量减半（3-6岁1/3袋，6-12岁1/2袋）',
+      '保持情绪舒畅（小儿多因受委屈闹情绪后诱发）',
+      '白萝卜汤助气机升降',
+      '忌油腻、甜腻（助湿碍气机）',
+    ],
+    redFlags: [
+      '寒热交替持续超过48小时',
+      '出现剧烈头痛、呕吐',
+      '精神极度萎靡',
+      '小便明显减少',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清天河水100次：清热调畅气机',
+      '揉阳陵泉50次：小腿外侧腓骨小头前下方，利胆疏肝',
+      '揉肝俞50次：第9胸椎棘突下旁开1.5寸，疏肝解郁',
+      '揉胆俞50次：第10胸椎棘突下旁开1.5寸，利胆和胃',
+      '揉足三里50次：健脾和胃',
+      '揉太阳50次：缓解头痛、目眩',
+    ],
+    tuiNaNote: '少阳证推拿以疏利气机为主，不宜过重手法。此证型常由情绪因素诱发，推拿时保持环境安静，配合轻声安抚宝宝情绪效果更佳。',
+    classicQuote: '伤寒五六日，中风，往来寒热，胸胁苦满，嘿嘿不欲饮食，心烦喜呕……小柴胡汤主之。',
+    classicSource: '《伤寒论》第96条',
+  },
+  {
+    id: 'flu-high',
+    name: '流感病毒性高热',
+    keyword: '突发高热 · 浑身酸痛 · 咽喉剧痛',
+    badge: '🚨 急',
+    color: '#cf1322',
+    pathomechanism: '时行疠气（流感病毒）侵袭，邪毒炽盛，直中肺卫。不同于普通感冒，流感为疫毒之邪，传染性强，传变迅速，起病即高热。',
+    keyPoints: ['起病急骤，数小时即高热', '全身肌肉酸痛明显', '咽喉剧痛如火灼', '精神萎靡嗜睡', '家庭/班级多人同时发病'],
+    symptoms: '突发高热（常≥39℃）、剧烈头痛、全身肌肉关节酸痛、咽喉干痛、干咳、精神萎靡、眼结膜充血。',
+    medicines: ['磷酸奥司他韦（48小时内西药首选）', '连花清瘟颗粒', '金花清感颗粒', '抗病毒口服液'],
+    medNote: '流感确诊后48小时是抗病毒治疗黄金窗口期。中成药起辅助作用，不能替代抗病毒药。连花清瘟含麻黄，3周岁以下慎用。',
+    homeCare: [
+      '立即隔离，戴口罩，单独使用餐具毛巾',
+      '对乙酰氨基酚/布洛芬退热（按体重给药）',
+      '大量补充温水或电解质水，防止脱水',
+      '保持室内通风，每日开窗30分钟',
+    ],
+    redFlags: [
+      '高热≥40℃',
+      '出现呼吸困难、胸闷、嘴唇发紫',
+      '持续呕吐、不能进食进水',
+      '意识模糊、惊厥抽搐',
+      '3周岁以下婴幼儿高热持续不退',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清天河水300次：大剂量清热，推拿退热核心手法',
+      '退六腑200次：前臂尺侧从肘推向腕，大寒清热（须在清天河水之后使用，不可单独先用）',
+      '推脊100次：从上向下推脊，通督泄热',
+      '揉大椎100次：清热要穴',
+      '揉曲池50次：清热要穴',
+      '揉涌泉50次：足底前1/3凹陷处，引热下行',
+    ],
+    tuiNaNote: '流感高热推拿重在辅助退热，不能替代抗病毒药物！退六腑为大寒手法，热退即停，不可过度使用。3周岁以下禁止退六腑，仅用清天河水+推脊，同时必须立即就医。推拿同时监测体温，30分钟后复测。',
+    classicQuote: '五疫之至，皆相染易，无问大小，病状相似。',
+    classicSource: '《素问·刺法论》',
+  },
+  {
+    id: 'mahuang',
+    name: '麻黄汤证（伤寒表实）',
+    keyword: '恶寒重 · 无汗 · 全身酸痛',
+    badge: '🫁 经方',
+    color: '#0958d9',
+    pathomechanism: '寒邪束表，卫阳被遏，营阴郁滞。寒邪收引，腠理闭塞故无汗；卫阳不达体表故恶寒；营阴郁滞不通则全身酸痛。属太阳伤寒表实证。',
+    keyPoints: ['恶寒极重，盖厚被仍觉冷', '完全无汗', '全身肌肉骨骼酸痛', '可能有发热但不一定很高', '不口渴'],
+    symptoms: '恶寒重、发热、无汗而喘、头身疼痛、筋骨酸痛、鼻塞、咳嗽、舌苔白薄、脉浮紧有力。',
+    medicines: ['风寒感冒颗粒（含麻黄）', '荆防颗粒', '葛根汤颗粒'],
+    medNote: '麻黄汤证多见于体质壮实的儿童。体弱、多汗、心脏病儿童绝对禁用含麻黄制剂。儿童用中成药而非原方汤剂。',
+    homeCare: [
+      '盖被发微汗即可，切忌大汗淋漓（汗多伤阳）',
+      '生姜葱白汤：生姜5片+连须葱白3根+红糖，热服',
+      '保暖，避免再次受凉',
+      '发汗期间不洗澡，汗后擦干换衣',
+    ],
+    redFlags: [
+      '高热持续不退',
+      '出现心悸、烦躁不安（麻黄敏感反应）',
+      '呼吸急促、鼻翼煽动',
+      '3周岁以下婴幼儿不推荐使用麻黄类药物',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '推三关200次：散寒温阳核心手法',
+      '揉外劳宫100次：手背中央温阳散寒',
+      '开天门50次：疏风散寒、醒脑开窍',
+      '推坎宫50次：疏风解表',
+      '揉太阳50次：缓解头痛身痛',
+      '揉一窝风100次：手背腕横纹中点，祛风散寒极效穴',
+      '揉大椎50次：振奋阳气',
+    ],
+    tuiNaNote: '此证型推拿以温阳散寒为主，推三关量大（200次）。推拿后盖薄被使微汗出，汗后立即擦干，不可大汗淋漓。此证不宜用退热手法（寒证用清热手法反而会加重病情）。',
+    classicQuote: '太阳病，头痛发热，身疼腰痛，骨节疼痛，恶风，无汗而喘者，麻黄汤主之。',
+    classicSource: '《伤寒论》第35条',
+  },
+  {
+    id: 'guizhi',
+    name: '桂枝汤证（中风表虚）',
+    keyword: '微恶风 · 有汗 · 脉浮缓',
+    badge: '🫁 经方',
+    color: '#1677ff',
+    pathomechanism: '风邪袭表，营卫不和。风为阳邪，其性开泄，腠理不密故有汗；卫气不固故恶风。出而不畅，表虚不固。属太阳中风表虚证。',
+    keyPoints: ['有汗（微汗，不多）', '怕风（吹风不舒服）', '发热或不发热', '体质偏弱、经常感冒的儿童多见', '与麻黄汤证互斥（一虚一实）'],
+    symptoms: '发热或不发热、微恶风、自汗出、鼻鸣、干呕、舌苔白薄、脉浮缓。',
+    medicines: ['桂枝颗粒', '表虚感冒颗粒', '玉屏风颗粒（平时预防用）'],
+    medNote: '桂枝汤证儿童不多见，多见于体质偏弱、经常感冒、一动就出汗的孩子。桂枝颗粒市场上不好买，可咨询药房定制。',
+    homeCare: [
+      '喝热稀粥助药力（桂枝汤原方服法要求"啜热稀粥一升余以助药力"）',
+      '微汗即可，不可大汗',
+      '忌生冷、黏滑、肉面、五辛、酒酪、臭恶等物',
+      '平时服玉屏风颗粒（黄芪+白术+防风）增强抵抗力',
+    ],
+    redFlags: [
+      '出汗不止、面色苍白（可能转为阳虚）',
+      '发热突然升高',
+      '出现烦躁、口渴（可能转为阳明证）',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '揉足三里100次：补脾益气、调和营卫',
+      '捏脊5遍：从尾骨至大椎，补气固表',
+      '补脾经150次：拇指桡侧从指尖向指根旋推，健脾益气',
+      '揉肺俞50次：第3胸椎棘突下旁开1.5寸，补肺固表',
+      '揉百会30次：头顶正中，升阳固表',
+      '摩腹50次：逆时针轻摩，补脾健胃',
+    ],
+    tuiNaNote: '此证型体质偏虚，推拿以补为主（非清非泻）。捏脊是核心手法，长期坚持可显著增强抵抗力、减少感冒频次。推拿后喝少量温热水。',
+    classicQuote: '太阳中风，阳浮而阴弱。阳浮者热自发，阴弱者汗自出。啬啬恶寒，淅淅恶风，翕翕发热，鼻鸣干呕者，桂枝汤主之。',
+    classicSource: '《伤寒论》第12条',
+  },
+  {
+    id: 'phlegm_heat',
+    name: '痰热咳嗽',
+    keyword: '黄稠痰 · 咽喉红 · 咳嗽重',
+    badge: '热',
+    color: '#d4380d',
+    pathomechanism: '热邪犯肺，炼液成痰。外感热邪或风寒入里化热，肺失清肃，津液被热邪煎炼为黄稠痰。痰热壅肺，气道不利故咳嗽剧烈。',
+    keyPoints: ['咳嗽剧烈，痰黄黏稠', '咽喉红肿', '胸痛或胸闷', '可能有发热', '舌红苔黄腻'],
+    symptoms: '咳嗽频繁剧烈、痰黄黏稠不易咳出、咽喉红肿痛、胸闷、发热口渴、舌红苔黄腻、脉滑数。',
+    medicines: ['小儿肺热咳喘口服液', '复方鲜竹沥液', '肺力咳合剂', '小儿咳喘灵颗粒'],
+    medNote: '复方鲜竹沥液清热化痰力强。小儿肺热咳喘口服液含麻黄，0-3岁慎用。痰热咳嗽忌用止咳糖浆（含罂粟壳者）强行镇咳，宜清热化痰为主。',
+    homeCare: [
+      '川贝雪梨：雪梨1个去核+川贝粉1g+冰糖少许，蒸20分钟',
+      '多喝水稀释痰液，拍背助排痰（空心掌从下往上拍）',
+      '保持空气湿润，用加湿器',
+      '忌甜腻食物（助痰）、辛辣食物（助热）',
+    ],
+    redFlags: [
+      '呼吸困难、嘴唇发紫',
+      '高热不退',
+      '咳嗽伴胸痛剧烈',
+      '痰中带血',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '清肺经200次：无名指掌面从指根推向指尖，清肺化痰',
+      '清天河水100次：清热',
+      '揉膻中100次：两乳连线中点，宽胸理气、化痰止咳',
+      '揉丰隆100次：小腿外侧中点（外踝上8寸），化痰要穴，效果极佳',
+      '揉肺俞100次：第3胸椎旁开1.5寸，宣肺止咳',
+      '分推肩胛骨50次：两拇指沿肩胛骨内侧缘分推，宽胸利气',
+      '运内八卦50次：理气化痰',
+    ],
+    tuiNaNote: '揉丰隆是最强化痰要穴，痰多时每侧揉100-150次效果最佳。配合空心掌从下往上拍背2-3分钟帮助排痰。痰黄黏稠者宜先清热后化痰，不可一味镇咳。',
+    classicQuote: '肺热叶焦，发为痿躄……',
+    classicSource: '《素问·痿论》',
+  },
+  {
+    id: 'dry_cough',
+    name: '久咳虚燥',
+    keyword: '干咳少痰 · 咽干口燥 · 午后低热',
+    badge: '虚',
+    color: '#8c8c8c',
+    pathomechanism: '久咳伤阴，肺燥津亏。感冒后期或反复咳嗽，耗伤肺阴，津液不足，肺失濡润。虚则补之，燥则润之。',
+    keyPoints: ['干咳无痰或少痰', '咽干口燥，喝水不能解', '午后或夜间咳嗽加重', '病程较长（2周以上）', '舌红少苔或地图舌'],
+    symptoms: '干咳、痰少而黏难以咳出、咽干口燥、声音嘶哑、午后潮热、手足心热、舌红少苔、脉细数。',
+    medicines: ['养阴清肺口服液', '百合固金口服液', '蜜炼川贝枇杷膏', '秋梨润肺膏'],
+    medNote: '久咳虚燥忌用清热化痰药（会进一步伤阴），宜养阴润肺。川贝枇杷膏偏滋腻，脾虚便溏者少用。',
+    homeCare: [
+      '川贝炖雪梨：雪梨+川贝1g+冰糖，隔水炖1小时',
+      '百合银耳羹：百合+银耳+枸杞，慢炖至黏稠',
+      '蜂蜜柠檬水（1岁以上方可食蜂蜜）',
+      '保持室内湿度50-60%，避免干燥空气刺激',
+      '忌辛辣、煎炸、甜腻食物',
+    ],
+    redFlags: [
+      '咳嗽超过4周不愈',
+      '出现胸痛、咯血',
+      '伴有消瘦、盗汗（警惕结核）',
+      '夜间阵发性呛咳',
+    ],
+    // 推拿配穴
+    tuiNa: [
+      '补肺经150次：无名指旋推（顺时针），补益肺气',
+      '揉肺俞100次：宣肺润燥',
+      '揉膻中80次：宽胸理气',
+      '揉涌泉100次：足底前1/3凹陷，滋阴降火',
+      '揉三阴交50次：内踝上3寸，滋阴润燥',
+      '捏脊5遍：补虚固本',
+      '揉足三里50次：培土生金（补脾以养肺）',
+    ],
+    tuiNaNote: '此证属虚，推拿以补法为主（禁清法、泻法）。揉涌泉滋阴降火是核心手法——久咳耗伤肺阴，引火归元。推拿可每日做，不间断，通常1-2周可见咳嗽减轻。推拿后喝少量蜂蜜水润燥（1岁以上可用蜂蜜）。',
+    classicQuote: '燥胜则干。',
+    classicSource: '《素问·阴阳应象大论》',
+  },
+]
+</script>
+
+<style scoped>
+/* ===== 页面 ===== */
+.knowledge-wrap {
+  min-height: 100vh;
+  background: linear-gradient(175deg, #f8f4ee 0%, #f0ebe3 50%, #e8dfd5 100%);
+}
+
+/* ===== 页头 ===== */
+.page-header {
+  position: relative;
+  overflow: hidden;
+}
+.header-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #8c7853, #a88c5e, #c4a265);
+  opacity: 0.92;
+}
+.header-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px 16px 18px;
+  color: #fff;
+}
+.back-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.3); }
+.header-content h2 {
+  font-size: 22px;
+  margin: 0 0 4px;
+  font-family: 'STKaiti', 'KaiTi', serif;
+  letter-spacing: 2px;
+}
+.header-content p {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* ===== 总论 ===== */
+.intro-card {
+  margin: 16px 14px 0;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 3px 16px rgba(139,119,86,0.10);
+  border: 1px solid #e8dfd5;
+}
+.intro-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #4a3728;
+  margin-bottom: 10px;
+  font-family: 'STKaiti', 'KaiTi', serif;
+}
+.intro-text {
+  font-size: 13px;
+  color: #7a6b54;
+  line-height: 1.85;
+}
+.intro-text strong {
+  color: #4a3728;
+}
+
+/* ===== 证型列表 ===== */
+.pattern-list {
+  padding: 16px 14px 0;
+}
+
+.pattern-card {
+  background: #ffffff;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(139,119,86,0.08);
+  overflow: hidden;
+  border: 1px solid #e8dfd5;
+  transition: all 0.2s ease;
+}
+.pattern-card.expanded {
+  box-shadow: 0 4px 20px rgba(139,119,86,0.15);
+}
+
+/* ===== 卡片头部 ===== */
+.pt-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.2s;
+}
+.pt-header:hover {
+  background: #fdfaf5;
+}
+.pt-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.pt-title-area {
+  flex: 1;
+  min-width: 0;
+}
+.pt-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a3728;
+  display: block;
+  font-family: 'STKaiti', 'KaiTi', serif;
+}
+.pt-keyword {
+  font-size: 11px;
+  color: #8c7853;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pt-toggle {
+  font-size: 16px;
+  color: #c4a265;
+  flex-shrink: 0;
+}
+
+/* ===== 展开体 ===== */
+.pt-body {
+  padding: 0 16px 20px;
+  border-top: 1px dashed #e8dfd5;
+  animation: expandIn 0.3s ease;
+}
+@keyframes expandIn {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 2000px; }
+}
+
+/* ===== 知识区块 ===== */
+.kb-section {
+  margin-top: 16px;
+}
+.kb-s-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a3728;
+  margin-bottom: 8px;
+}
+.kb-text {
+  font-size: 12px;
+  color: #7a6b54;
+  line-height: 1.8;
+}
+
+/* 要点标签 */
+.kb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.kb-tag {
+  display: inline-block;
+  background: #f8f4ee;
+  color: #8c7853;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid #e8dfd5;
+}
+
+/* 药品推荐 */
+.med-section-box {
+  background: #f6ffed;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #b7eb8f;
+}
+.med-rec-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.med-rec-item {
+  background: #ffffff;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #389e0d;
+}
+
+/* 护理 */
+.care-box {
+  background: #e6f7ff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #91d5ff;
+}
+.care-item {
+  font-size: 12px;
+  color: #0050b3;
+  line-height: 1.8;
+  padding: 2px 0;
+}
+
+/* 就医红线 */
+.red-box {
+  background: #fff2f0;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #ffccc7;
+}
+.red-item {
+  font-size: 12px;
+  color: #cf1322;
+  line-height: 1.8;
+  padding: 2px 0;
+}
+
+/* 经典引用 */
+.classic-box {
+  background: #f8f4ee;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #d4c5a9;
+}
+.classic-text {
+  font-size: 13px;
+  color: #4a3728;
+  line-height: 1.8;
+  font-family: 'STKaiti', 'KaiTi', 'SimSun', serif;
+  font-style: italic;
+}
+.classic-source {
+  font-size: 11px;
+  color: #8c7853;
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* ===== 推拿配穴 ===== */
+.tui-box {
+  background: #fffbe6;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #ffe58f;
+}
+.tui-item {
+  font-size: 12px;
+  color: #8c6d1f;
+  line-height: 1.9;
+  padding: 3px 0;
+  padding-left: 12px;
+  position: relative;
+}
+.tui-item::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: #d4a017;
+  font-size: 10px;
+}
+
+/* ===== 推拿总论手法网格 ===== */
+.tuina-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tuina-item {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1 1 calc(50% - 6px);
+  min-width: 140px;
+}
+.tuina-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8c6d1f;
+  margin-bottom: 4px;
+}
+.tuina-desc {
+  display: block;
+  font-size: 11px;
+  color: #a68a2e;
+  line-height: 1.6;
+}
+
+/* ===== 3周岁以下婴幼儿方案 ===== */
+.infant-card {
+  border: 2px solid #ffadd2;
+}
+.infant-proto {
+  background: #fff0f6;
+  border: 1px solid #ffadd2;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.infant-proto-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c41d7f;
+  margin-bottom: 8px;
+}
+.infant-proto-step {
+  font-size: 12px;
+  color: #8c1a56;
+  line-height: 1.8;
+  padding: 2px 0;
+  padding-left: 16px;
+  position: relative;
+}
+.infant-proto-step::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #e87da0;
+}
+.disclaimer {
+  text-align: center;
+  padding: 24px 16px 0;
+  color: #b5a48a;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.disclaimer p { margin: 0; }
+</style>
